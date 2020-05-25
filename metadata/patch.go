@@ -50,7 +50,7 @@ func GeneratePatch(current, obj runtime.Object) (*PatchData, error) {
 		return nil, err
 	}
 
-	patchMetadata, err := getLookupPatchMeta(obj)
+	patchMetadata, err := getLookupPatchMeta(current)
 	if err != nil {
 		return nil, err
 	}
