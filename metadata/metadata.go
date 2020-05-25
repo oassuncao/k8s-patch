@@ -92,11 +92,44 @@ func removeDefaultValues(data map[string]interface{}) {
 			continue
 		}
 
-		switch value.(type) {
-		case map[string]interface{}:
-			removeDefaultValues(value.(map[string]interface{}))
-		default:
+		removeDefaultValuesType(value)
+	}
+}
+
+func removeDefaultValuesType(value interface{}) {
+	switch value.(type) {
+	case map[string]interface{}:
+		removeDefaultValues(value.(map[string]interface{}))
+	case []interface{}:
+		values := value.([]interface{})
+		removeDefaultValuesSlice(values)
+	default:
+		return
+	}
+}
+
+func removeDefaultValuesSlice(data []interface{}) {
+	if data == nil || len(data) == 0 {
+		return
+	}
+
+	var indexesToRemove []int
+	for i := 0; i < len(data); i++ {
+		value := data[i]
+		if isDefault(value) {
+			indexesToRemove = append(indexesToRemove, i)
 			continue
 		}
+		removeDefaultValuesType(value)
 	}
+
+	if len(indexesToRemove) != 0 {
+		for index := range indexesToRemove {
+			removeIndex(data, index)
+		}
+	}
+}
+
+func removeIndex(data []interface{}, index int) []interface{} {
+	return append(data[:index], data[index+1:]...)
 }
