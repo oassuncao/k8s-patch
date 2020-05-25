@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestDeepEqual(t *testing.T) {
+func TestDeepEqualPatch(t *testing.T) {
 	data := &v1.Service{Spec: v1.ServiceSpec{ClusterIP: "None"}}
 	metadata.SetMetadata(data)
 
@@ -48,7 +48,7 @@ func TestDeepEqual(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := DeepEqual(tt.args.current, tt.args.obj)
+			got, err := DeepEqualPatch(tt.args.current, tt.args.obj)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("DeepEqual() error = %v, wantErr %v", err, tt.wantErr)
 				return

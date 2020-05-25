@@ -19,7 +19,7 @@ func GetAnnotationName() string {
 }
 
 func SetMetadata(obj runtime.Object) error {
-	metadata, err := getMetadata(obj)
+	metadata, err := GetMetadata(obj)
 	if err != nil {
 		return err
 	}

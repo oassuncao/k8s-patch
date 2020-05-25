@@ -79,7 +79,7 @@ func Test_getData(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, _ := getData(tt.args.obj)
+			got, _ := GetData(tt.args.obj)
 			if len(got) != 0 && tt.wantEmpty {
 				t.Errorf("The result is not empty")
 			}
