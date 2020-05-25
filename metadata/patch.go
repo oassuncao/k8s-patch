@@ -1,10 +1,13 @@
 package metadata
 
 import (
+	"github.com/oassuncao/k8s-patch/schema"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/strategicpatch"
 )
+
+var resources schema.Resource
 
 type PatchData struct {
 	PatchType types.PatchType
@@ -47,7 +50,7 @@ func GeneratePatch(current, obj runtime.Object) (*PatchData, error) {
 		return nil, err
 	}
 
-	patchMetadata, err := strategicpatch.NewPatchMetaFromStruct(obj)
+	patchMetadata, err := getLookupPatchMeta(obj)
 	if err != nil {
 		return nil, err
 	}
@@ -58,4 +61,24 @@ func GeneratePatch(current, obj runtime.Object) (*PatchData, error) {
 	}
 
 	return newPatchData(types.StrategicMergePatchType, patch), nil
+}
+
+func getLookupPatchMeta(obj runtime.Object) (strategicpatch.LookupPatchMeta, error) {
+	if resources != nil {
+		resource := resources.LookupResource(obj.GetObjectKind().GroupVersionKind())
+		if resource != nil {
+			return strategicpatch.NewPatchMetaFromOpenAPI(resource), nil
+		}
+	}
+
+	patchMetadata, err := strategicpatch.NewPatchMetaFromStruct(obj)
+	if err != nil {
+		return nil, err
+	}
+
+	return patchMetadata, err
+}
+
+func SetResource(r schema.Resource) {
+	resources = r
 }

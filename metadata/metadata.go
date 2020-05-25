@@ -81,41 +81,47 @@ func getData(obj runtime.Object) ([]byte, error) {
 	return nil, nil
 }
 
-func removeDefaultValuesType(value interface{}) bool {
+func removeDefaultValuesType(value interface{}) {
 	switch value.(type) {
 	case map[string]interface{}:
-		return removeDefaultValues(value.(map[string]interface{}))
+		removeDefaultValues(value.(map[string]interface{}))
+		return
 	case []interface{}:
-		return removeDefaultValuesSlice(value.([]interface{}))
+		removeDefaultValuesSlice(value.([]interface{}))
+		return
 	default:
-		return true
+		return
 	}
 }
 
-func removeDefaultValues(data map[string]interface{}) bool {
+func removeDefaultValues(data map[string]interface{}) {
 	if data == nil || len(data) == 0 {
-		return false
+		return
 	}
 
 	for key, value := range data {
-		if isDefault(value) || !removeDefaultValuesType(value) {
+		if isDefault(value) {
 			delete(data, key)
+			continue
 		}
+
+		removeDefaultValuesType(value)
 	}
-	return true
 }
 
-func removeDefaultValuesSlice(data []interface{}) bool {
+func removeDefaultValuesSlice(data []interface{}) {
 	if data == nil || len(data) == 0 {
-		return false
+		return
 	}
 
 	var indexesToRemove []int
 	for i := 0; i < len(data); i++ {
 		value := data[i]
-		if isDefault(value) || !removeDefaultValuesType(value) {
+		if isDefault(value) {
 			indexesToRemove = append(indexesToRemove, i)
 		}
+
+		removeDefaultValuesType(value)
 	}
 
 	if len(indexesToRemove) != 0 {
@@ -123,7 +129,6 @@ func removeDefaultValuesSlice(data []interface{}) bool {
 			removeIndex(data, index)
 		}
 	}
-	return true
 }
 
 func removeIndex(data []interface{}, index int) []interface{} {
