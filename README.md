@@ -30,7 +30,7 @@ Checking if has any change
 found := &corev1.Service{}
 err := r.client.Get(context.TODO(), types.NamespacedName{Name: service.Name, Namespace: instance.Namespace}, found)
 if err == nil {
-		equal, err := compare.DeepEqual(found, service);
+		equal, err := compare.DeepEqualPatch(found, service);
 		if err != nil {
 			log.Error(err, "Error on DeepEqual")
 			return reconcile.Result{}, err

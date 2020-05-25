@@ -42,7 +42,7 @@ func SetMetadata(obj runtime.Object) error {
 	return nil
 }
 
-func getMetadata(obj runtime.Object) ([]byte, error) {
+func GetMetadata(obj runtime.Object) ([]byte, error) {
 	data, err := getMetadataMap(obj)
 	if err != nil {
 		return nil, err
@@ -66,7 +66,7 @@ func getMetadataMap(obj runtime.Object) (map[string]interface{}, error) {
 	return dataMap, nil
 }
 
-func getData(obj runtime.Object) ([]byte, error) {
+func GetData(obj runtime.Object) ([]byte, error) {
 	annotations, err := metadataAccessor.Annotations(obj)
 	if err != nil {
 		return nil, err

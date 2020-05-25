@@ -30,7 +30,7 @@ func newPatchData(patchType types.PatchType, data []byte) *PatchData {
 }
 
 func GeneratePatch(current, obj runtime.Object) (*PatchData, error) {
-	initialData, err := getData(current)
+	initialData, err := GetData(current)
 	if err != nil {
 		return nil, err
 	}
@@ -40,12 +40,12 @@ func GeneratePatch(current, obj runtime.Object) (*PatchData, error) {
 		return nil, err
 	}
 
-	objMetadata, err := getMetadata(obj)
+	objMetadata, err := GetMetadata(obj)
 	if err != nil {
 		return nil, err
 	}
 
-	currentMetadata, err := getMetadata(current)
+	currentMetadata, err := GetMetadata(current)
 	if err != nil {
 		return nil, err
 	}
